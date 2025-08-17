@@ -205,16 +205,26 @@ h1 {
 }
 
 /* final responsive small-screen tweaks */
-@media (max-width: 420px) {
-  #question-row {
-    gap: var(--space-sm);
+@media (max-width: 576px) {
+  body {
+    padding: 0 !important;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  #question-row .badge {
-    align-self: center;
-    font-size: 0.85rem;
+  .main-wrapper {
+    max-width: 100vw;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
   }
-  #question-row h3 {
-    text-align: center; /* center the question on very small screens for better balance */
+  .container {
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: var(--container-pad-sm) !important;
   }
 }
