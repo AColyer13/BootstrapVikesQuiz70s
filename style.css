@@ -230,6 +230,22 @@ h1 {
   }
 }
 
+#quiz-container h1 {
+  margin-bottom: 1rem !important;
+}
+#quiz-container #question-row {
+  margin-bottom: 1rem !important;
+}
+#quiz-container .question-flex {
+  margin-top: 0 !important;
+}
+
+/* Optional: if any mt/mb utility classes conflict, this normalizes them */
+#quiz-container h1.mb-2,
+#quiz-container #question-row.mb-2 {
+  margin-bottom: 1rem !important;
+}
+
 /* Medium */
 @media (max-width: 576px) {
   .container {
