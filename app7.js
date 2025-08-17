@@ -1,209 +1,151 @@
 const quizQuestions = [
-  {
-    question: "Which Vikings defensive lineman recorded a safety in the 1970 season, showcasing the dominance of the Purple People Eaters?",
-    options: ["Alan Page", "Jim Marshall", "Carl Eller", "Gary Larsen"],
-    correctAnswer: 0
-  },
-  {
-    question: "Who led the Vikings in rushing yards during the 1970 season?",
-    options: ["Dave Osborn", "Chuck Foreman", "Oscar Reed", "Clint Jones"],
-    correctAnswer: 0
-  },
-  {
-    question: "Which Vikings player had the longest interception return in the 1970 season?",
-    options: ["Paul Krause", "Ed Sharockman", "Charlie West", "Karl Kassulke"],
-    correctAnswer: 1
-  },
-  {
-    question: "In 1970, which Vikings linebacker was known for his coverage skills and recorded multiple interceptions?",
-    options: ["Roy Winston", "Jeff Siemon", "Wally Hilgenberg", "Lonnie Warwick"],
-    correctAnswer: 3
-  },
-  {
-    question: "Which team handed the Vikings their first loss of the 1970 season, ending a 5-game win streak?",
-    options: ["St. Louis Cardinals", "San Francisco 49ers", "Detroit Lions", "Dallas Cowboys"],
-    correctAnswer: 0
-  },
-  {
-    question: "What was the Vikings' point differential at the end of the 1970 regular season?",
-    options: ["+140", "+124", "+98", "+112"],
-    correctAnswer: 1
-  },
-  {
-    question: "Which Vikings offensive lineman was selected to the Pro Bowl in 1970 for his run-blocking dominance?",
-    options: ["Grady Alderman", "Mick Tingelhoff", "Ed White", "Steve Riley"],
-    correctAnswer: 0
-  },
-  {
-    question: "Which Vikings wide receiver caught a 65-yard touchdown pass in the 1970 playoff loss to the 49ers?",
-    options: ["Gene Washington", "Bob Grim", "John Beasley", "John Henderson"],
-    correctAnswer: 1
-  },
-  {
-    question: "Who was the Vikings' punter in 1970, known for his hang time and directional kicking?",
-    options: ["Mike Eischeid", "Greg Coleman", "Bob Lee", "Tommy Kramer"],
-    correctAnswer: 0
-  },
-  {
-    question: "Which Vikings assistant coach in 1970 later became an NFL head coach and GM?",
-    options: ["Jerry Burns", "Pete Carroll", "Tony Dungy", "Mike Lynn"],
-    correctAnswer: 0
-  }
+  { q: "Which Vikings defensive lineman recorded a safety in the 1970 season, showcasing the dominance of the Purple People Eaters?", o: ["Alan Page","Jim Marshall","Carl Eller","Gary Larsen"], a: 0 },
+  { q: "Who led the Vikings in rushing yards during the 1970 season?", o: ["Dave Osborn","Chuck Foreman","Oscar Reed","Clint Jones"], a: 0 },
+  { q: "Which Vikings player had the longest interception return in the 1970 season?", o: ["Paul Krause","Ed Sharockman","Charlie West","Karl Kassulke"], a: 1 },
+  { q: "In 1970, which Vikings linebacker was known for his coverage skills and recorded multiple interceptions?", o: ["Roy Winston","Jeff Siemon","Wally Hilgenberg","Lonnie Warwick"], a: 3 },
+  { q: "Which team handed the Vikings their first loss of the 1970 season, ending a 5-game win streak?", o: ["St. Louis Cardinals","San Francisco 49ers","Detroit Lions","Dallas Cowboys"], a: 0 },
+  { q: "What was the Vikings' point differential at the end of the 1970 regular season?", o: ["+140","+124","+98","+112"], a: 1 },
+  { q: "Which Vikings offensive lineman was selected to the Pro Bowl in 1970 for his run-blocking dominance?", o: ["Grady Alderman","Mick Tingelhoff","Ed White","Steve Riley"], a: 0 },
+  { q: "Which Vikings wide receiver caught a 65-yard touchdown pass in the 1970 playoff loss to the 49ers?", o: ["Gene Washington","Bob Grim","John Beasley","John Henderson"], a: 1 },
+  { q: "Who was the Vikings' punter in 1970, known for his hang time and directional kicking?", o: ["Mike Eischeid","Greg Coleman","Bob Lee","Tommy Kramer"], a: 0 },
+  { q: "Which Vikings assistant coach in 1970 later became an NFL head coach and GM?", o: ["Jerry Burns","Pete Carroll","Tony Dungy","Mike Lynn"], a: 0 }
 ];
 
-let currentQuestionIndex = 0;
-let score = 0;
-let shuffledQuestions = [];
-
-// Simple shuffle helper
-function shuffleArray(arr) {
-  arr.sort(() => Math.random() - 0.5);
-}
-
-// Get DOM elements
-const startContainer = document.getElementById('start-container'),
-      quizContainer = document.getElementById('quiz-container'),
-      questionContainer = document.getElementById('question-container'),
-      optionsContainer = document.getElementById('options-container'),
-      nextButton = document.getElementById('next-button'),
-      scoreContainer = document.getElementById('score-container'),
-      scoreDisplay = document.getElementById('score-display'),
-      restartButton = document.getElementById('restart-button'),
-      progressBar = document.getElementById('progress-bar'),
-      summaryContainer = document.getElementById('summary-container');
-
-// Start quiz button click
-document.getElementById('start-button').onclick = () => {
-  startContainer.classList.add('d-none');
-  quizContainer.classList.remove('d-none');
-  currentQuestionIndex = score = 0;
-  // Shuffle questions and options
-  shuffledQuestions = quizQuestions.map(q => {
-    const optionObjs = q.options.map((opt, i) => ({
-      text: opt,
-      isCorrect: i === q.correctAnswer
-    }));
-    shuffleArray(optionObjs);
-    return {
-      question: q.question,
-      options: optionObjs.map(opt => opt.text),
-      correctAnswer: optionObjs.findIndex(opt => opt.isCorrect),
-      userSelected: null // Track user's answer
-    };
-  });
-  shuffleArray(shuffledQuestions);
-  showQuestion();
-  updateProgressBar();
-  summaryContainer.innerHTML = ""; // Clear summary on new quiz
+const els = {
+  startBtn: document.getElementById('start-button'),
+  start: document.getElementById('start-container'),
+  quiz: document.getElementById('quiz-container'),
+  questionBox: document.getElementById('question-container'),
+  options: document.getElementById('options-container'),
+  nextBtn: document.getElementById('next-button'),
+  scoreWrap: document.getElementById('score-container'),
+  score: document.getElementById('score-display'),
+  restart: document.getElementById('restart-button'),
+  summary: document.getElementById('summary-container'),
+  prog: document.getElementById('quiz-progress'),
+  progText: document.getElementById('progress-text') // stays empty
 };
 
-// Display current question and options
-function showQuestion() {
-  const q = shuffledQuestions[currentQuestionIndex];
-  questionContainer.innerHTML = `
-    <div id="question-row" class="mb-2" style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
-      <span class="badge bg-warning text-dark fs-6">Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}</span>
-      <div id="feedback-message"></div>
-    </div>
-    <p></p>
-    <p></p>
-    <h3 id="quiz-question" class="question-flex">${q.question}</h3>
-  `;
-  optionsContainer.innerHTML = q.options.map((opt, i) =>
-    `<button class="btn btn-warning w-100 fw-bold mb-2 option-btn" onclick="handleAnswerSelection(${i})">${opt}</button>`
-  ).join('');
-  nextButton.classList.add('invisible');
+let items = [];
+let idx = 0;
+let score = 0;
 
-  // Dynamically adjust font size to fit within 2 lines
-  const questionEl = document.getElementById('quiz-question');
-  let fontSize = 2; // rem
-  const maxLines = 2;
-  const lineHeight = 1.2;
-  const containerHeight = fontSize * lineHeight * maxLines * 16; // 16px per rem
-
-  // Shrink font size until it fits within two lines or reaches minimum
-  while (questionEl.scrollHeight > containerHeight && fontSize > 1.1) {
-    fontSize -= 0.1;
-    questionEl.style.fontSize = fontSize + 'rem';
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random()* (i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
-// Handle answer selection
-window.handleAnswerSelection = function(selectedIndex) {
-  const q = shuffledQuestions[currentQuestionIndex];
-  q.userSelected = selectedIndex; // Store user's answer
-  document.querySelectorAll('.option-btn').forEach((btn, i) => {
-    btn.classList.toggle('btn-success', i === q.correctAnswer);
-    btn.classList.toggle('btn-danger', i !== q.correctAnswer);
-    btn.classList.remove('btn-warning');
-    btn.style.opacity = i === q.correctAnswer ? '1' : '0.3';
-    btn.disabled = true;
+function startQuiz() {
+  idx = 0; score = 0;
+  // clone & expand
+  items = quizQuestions.map(q => {
+    const opts = q.o.map((t,i)=>({ t, correct: i === q.a }));
+    shuffle(opts);
+    return {
+      q: q.q,
+      opts: opts.map(o=>o.t),
+      a: opts.findIndex(o=>o.correct),
+      pick: null
+    };
   });
-  const feedback = selectedIndex === q.correctAnswer
+  shuffle(items);
+  els.summary.innerHTML = '';
+  els.start.classList.add('d-none');
+  els.scoreWrap.classList.add('d-none');
+  els.quiz.classList.remove('d-none');
+  updateProgress(); // 0
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const cur = items[idx];
+  els.questionBox.innerHTML = `
+    <div id="question-row" class="mb-2 d-flex align-items-center justify-content-center gap-2 flex-wrap">
+      <span class="badge bg-warning text-dark fs-6">Question ${idx+1} of ${items.length}</span>
+      <div id="feedback-message"></div>
+    </div>
+    <h3 id="quiz-question" class="question-flex mt-2">${cur.q}</h3>
+  `;
+  els.options.innerHTML = cur.opts.map((t,i)=>
+    `<button class="btn btn-warning w-100 fw-bold mb-2 option-btn" data-i="${i}">${t}</button>`
+  ).join('');
+  els.nextBtn.classList.add('invisible');
+  els.options.querySelectorAll('.option-btn').forEach(b=>{
+    b.onclick = () => handlePick(parseInt(b.dataset.i,10));
+  });
+  updateProgress(idx); // position before answer
+}
+
+function handlePick(sel) {
+  const cur = items[idx];
+  if (cur.pick !== null) return;
+  cur.pick = sel;
+  const correct = sel === cur.a;
+  if (correct) score++;
+
+  els.options.querySelectorAll('.option-btn').forEach((btn,i)=>{
+    btn.classList.remove('btn-warning','btn-success','btn-danger','btn-outline-dark');
+    if (correct) {
+      if (i === cur.a) { btn.classList.add('btn-success'); btn.disabled = false; }
+      else { btn.classList.add('btn-outline-dark'); btn.disabled = true; }
+    } else {
+      if (i === cur.a) { btn.classList.add('btn-success'); btn.disabled = false; }
+      else if (i === sel) { btn.classList.add('btn-danger'); btn.disabled = false; }
+      else { btn.classList.add('btn-outline-dark'); btn.disabled = true; }
+    }
+  });
+
+  const fb = document.getElementById('feedback-message');
+  if (fb) fb.innerHTML = correct
     ? '<span class="text-success fw-bold">Correct!</span>'
     : '<span class="text-danger fw-bold">Incorrect!</span>';
-  document.getElementById('feedback-message').innerHTML = feedback;
-  if (selectedIndex === q.correctAnswer) score++;
-  nextButton.classList.remove('invisible');
-};
 
-// Next question button click
-nextButton.onclick = () => {
-  currentQuestionIndex++;
-  currentQuestionIndex < shuffledQuestions.length ? (showQuestion(), updateProgressBar()) : showScore();
-};
-
-// Show final score and summary
-function showScore() {
-  quizContainer.classList.add('d-none');
-  scoreContainer.classList.remove('d-none');
-  scoreDisplay.textContent = `${score} / ${shuffledQuestions.length}`;
-
-  // Build summary HTML
-  let summaryHTML = '<div class="mt-3">';
-  shuffledQuestions.forEach((q, idx) => {
-    const userAnswered = q.userSelected !== null;
-    const isCorrect = userAnswered && q.userSelected === q.correctAnswer;
-    summaryHTML += `
-      <div class="mb-2 small text-start">
-        <strong>Q${idx + 1}:</strong> ${q.question}<br>
-        <span>
-          ${
-            isCorrect
-              ? `You answered correctly: <span class="text-success">${q.options[q.correctAnswer]}</span>`
-              : `Your answer: <span class="text-danger">${userAnswered ? q.options[q.userSelected] : '<em>No answer</em>'}</span>
-                 <br>Correct answer: <span class="text-success">${q.options[q.correctAnswer]}</span>`
-          }
-        </span>
-      </div>
-    `;
-  });
-  summaryHTML += '</div>';
-  summaryContainer.innerHTML = summaryHTML;
+  els.nextBtn.classList.remove('invisible');
+  updateProgress(idx + 1); // answered count
 }
 
-document.body.classList.add('noscroll'); // Prevent scrolling at start
-
-function showScoreContainer() {
-  // ...existing code to show score container...
-  document.getElementById('score-container').classList.remove('d-none');
-  document.body.classList.remove('noscroll'); // Allow scrolling now
+function next() {
+  idx++;
+  if (idx < items.length) renderQuestion();
+  else finish();
 }
 
-// Restart quiz button click
-restartButton.onclick = () => {
-  scoreContainer.classList.add('d-none');
-  startContainer.classList.remove('d-none');
-  progressBar.style.width = '0%';
-  progressBar.setAttribute('aria-valuenow', 0);
-  summaryContainer.innerHTML = "";
+function finish() {
+  els.quiz.classList.add('d-none');
+  els.scoreWrap.classList.remove('d-none');
+  els.score.textContent = `${score} / ${items.length}`;
+  els.summary.innerHTML = items.map((it,i)=>{
+    const ok = it.pick === it.a;
+    return `<div class="mb-2 small text-start">
+      <strong>Q${i+1}:</strong> ${it.q}<br>
+      ${
+        ok
+          ? `You answered: <span class="text-success">${it.opts[it.a]}</span>`
+          : `Your answer: <span class="text-danger">${it.pick!=null?it.opts[it.pick]:'<em>No answer</em>'}</span><br>
+             Correct: <span class="text-success">${it.opts[it.a]}</span>`
+      }
+    </div>`;
+  }).join('');
+  updateProgress(items.length);
+}
+
+function updateProgress(done = 0) {
+  if (!els.prog) return;
+  const total = items.length || quizQuestions.length;
+  const pct = Math.round((done / total) * 100);
+  els.prog.value = pct;
+  els.prog.setAttribute('aria-valuenow', pct);
+  if (els.progText) els.progText.textContent = ''; // keep empty
+}
+
+// Event wiring
+els.startBtn.onclick = startQuiz;
+els.nextBtn.onclick = next;
+els.restart.onclick = () => {
+  els.scoreWrap.classList.add('d-none');
+  els.start.classList.remove('d-none');
+  updateProgress(0);
+  items = [];
 };
-
-// Update progress bar
-function updateProgressBar() {
-  const percent = Math.round((currentQuestionIndex / shuffledQuestions.length) * 100);
-  progressBar.style.width = `${percent}%`;
-  progressBar.setAttribute('aria-valuenow', percent);
-}
-
-
