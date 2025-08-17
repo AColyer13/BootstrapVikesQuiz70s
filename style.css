@@ -1,3 +1,13 @@
+:root{
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --container-pad: 3rem;
+  --container-pad-sm: 1.5rem;
+}
+
+/* reset / base */
 html, body {
   height: 100%;
   margin: 0;
@@ -12,8 +22,10 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* layout wrapper */
 .main-wrapper {
   max-width: 960px;
   width: 100%;
@@ -21,16 +33,25 @@ body {
   margin-right: auto;
   padding-left: 32px;
   padding-right: 32px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 3rem); /* leaves a little breathing room */
+  overflow-y: auto;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  -webkit-overflow-scrolling: touch;
 }
 
+/* card/container */
 .container {
   background: rgba(79, 38, 131, 0.92);
   color: #ffc107;
-  padding: 3rem !important;
+  padding: var(--container-pad) !important;
   box-sizing: border-box;
   overflow: hidden;
+  border-radius: 12px;
 }
 
+/* responsive tweaks */
 @media (max-width: 576px) {
   .main-wrapper {
     max-width: 95vw;
@@ -38,28 +59,30 @@ body {
     padding-right: 3vw;
   }
   .container {
-    padding: 1.5rem !important;
+    padding: var(--container-pad-sm) !important;
   }
- h1 {
+  h1 {
     font-size: 1.6rem !important;
   }
   #question-container h3 {
     font-size: 1rem !important;
   }
-
 }
 
+/* question text: flexible/responsive */
 .question-flex {
-  font-size: 1.5rem;
+  /* responsive font that scales but stays readable */
+  font-size: clamp(1rem, 1.1rem + 1vw, 1.5rem);
   line-height: 1.2;
   word-break: break-word;
   display: block;
-  margin: 0 auto;
-  text-align: center;
+  margin: 0;             /* controlled by #question-row spacing */
+  text-align: left;      /* left align for reading; on very small screens CSS below centers */
   max-width: 100%;
-
+  min-width: 0;          /* allow flex child to shrink properly */
 }
 
+/* progress bar styling */
 #progress-bar {
   pointer-events: none;
   cursor: default;
@@ -68,12 +91,16 @@ body {
   box-shadow: none !important;
   user-select: none;
   opacity: 1 !important;
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
 }
+
 .progress {
   background-color: #2d014d !important;
   border-radius: 8px;
 }
 
+/* headings */
 h1 {
   color: #ffc107;
   font-weight: bold;
@@ -83,42 +110,55 @@ h1 {
      2px -2px 0 #2d014d,
     -2px  2px 0 #2d014d,
      2px  2px 0 #2d014d;
-  margin: -1px !important;
+  margin-bottom: 0;
 }
 
+/* QUESTION ROW - HORIZONTAL layout (badge + question side-by-side) */
+#question-container {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* single definition: horizontal flex, wraps on narrow screens */
 #question-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: var(--space-md);     /* space between badge and question */
+  width: 100%;
+  flex-wrap: wrap;          /* allow wrapping on narrow screens (badge moves above when needed) */
+  margin-bottom: var(--space-md);
 }
 
+/* ensure badge doesn't shrink and keeps neat spacing */
+#question-row .badge {
+  flex: 0 0 auto;
+  margin: 0;                /* keep badge flush with row gap */
+  align-self: flex-start;   /* aligns badge with top of multi-line question if question wraps */
+  padding: 0.45rem 0.65rem;
+}
+
+/* question headline in the row */
 #question-row h3 {
-  margin: 0rem 0 0rem 0;
-  flex: 1 1 auto;
+  margin: 0;
+  flex: 1 1 auto;           /* take remaining space, but allow shrinking */
+  min-width: 0;             /* important for flex children with overflow */
   text-align: left;
-
-}
-#question-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
+  line-height: 1.25;
 }
 
+/* feedback message sits below row when present */
 #feedback-message {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
   min-height: 0;
-  /* Hide when empty */
+  margin-top: var(--space-sm);
 }
-
-#feedback-message:empty {
-  display: none;
-}
-
+#feedback-message:empty { display: none; }
 #feedback-message span {
   margin: 0 !important;
   padding: 0 !important;
@@ -126,8 +166,51 @@ h1 {
   line-height: 1rem;
 }
 
-#restart-button {
-  margin-top: 1rem;
+/* options and controls spacing */
+#options-container {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
 }
 
+#next-button,
+#restart-button,
+#start-button {
+  margin-top: var(--space-md);
+}
 
+/* button spacing inside lists */
+.btn {
+  margin-bottom: var(--space-sm);
+}
+
+#score-container,
+#quiz-container {
+  overflow: visible;
+}
+
+/* spacing for summary content so items don't butt up to the container edge */
+#summary-container {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  overflow: visible;
+}
+
+/* small positive spacing for direct children to avoid accidental overlap */
+#summary-container > * {
+  margin-top: 0.5rem;
+}
+
+/* final responsive small-screen tweaks */
+@media (max-width: 420px) {
+  #question-row {
+    gap: var(--space-sm);
+  }
+  #question-row .badge {
+    align-self: center;
+    font-size: 0.85rem;
+  }
+  #question-row h3 {
+    text-align: center; /* center the question on very small screens for better balance */
+    width: 100%;
+  }
+}
