@@ -83,7 +83,7 @@ h1 {
      2px -2px 0 #2d014d,
     -2px  2px 0 #2d014d,
      2px  2px 0 #2d014d;
-  margin: 0 !important;
+  margin: -1px !important;
 }
 
 #question-row {
@@ -129,4 +129,5 @@ h1 {
 #restart-button {
   margin-top: 1rem;
 }
+
 
