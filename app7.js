@@ -23,7 +23,7 @@ const els = {
   restart: document.getElementById('restart-button'),
   summary: document.getElementById('summary-container'),
   prog: document.getElementById('quiz-progress'),
-  progText: document.getElementById('progress-text') // stays empty
+  progText: document.getElementById('progress-text')
 };
 
 let items = [];
@@ -39,7 +39,6 @@ function shuffle(arr){
 
 function startQuiz() {
   idx = 0; score = 0;
-  // clone & expand
   items = quizQuestions.map(q => {
     const opts = q.o.map((t,i)=>({ t, correct: i === q.a }));
     shuffle(opts);
@@ -55,7 +54,7 @@ function startQuiz() {
   els.start.classList.add('d-none');
   els.scoreWrap.classList.add('d-none');
   els.quiz.classList.remove('d-none');
-  updateProgress(); // 0
+  updateProgress();
   renderQuestion();
 }
 
@@ -75,7 +74,7 @@ function renderQuestion() {
   els.options.querySelectorAll('.option-btn').forEach(b=>{
     b.onclick = () => handlePick(parseInt(b.dataset.i,10));
   });
-  updateProgress(idx); // position before answer
+  updateProgress(idx);
 }
 
 function handlePick(sel) {
@@ -103,7 +102,7 @@ function handlePick(sel) {
     : '<span class="text-danger fw-bold">Incorrect!</span>';
 
   els.nextBtn.classList.remove('invisible');
-  updateProgress(idx + 1); // answered count
+  updateProgress(idx + 1);
 }
 
 function next() {
@@ -137,10 +136,9 @@ function updateProgress(done = 0) {
   const pct = Math.round((done / total) * 100);
   els.prog.value = pct;
   els.prog.setAttribute('aria-valuenow', pct);
-  if (els.progText) els.progText.textContent = ''; // keep empty
+  if (els.progText) els.progText.textContent = '';
 }
 
-// Event wiring
 els.startBtn.onclick = startQuiz;
 els.nextBtn.onclick = next;
 els.restart.onclick = () => {
