@@ -105,12 +105,25 @@ function showQuestion() {
       <span class="badge bg-warning text-dark fs-6">Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}</span>
       <div id="feedback-message"></div>
     </div>
-    <h3>${q.question}</h3>
+    <h3 id="quiz-question" class="question-flex">${q.question}</h3>
   `;
   optionsContainer.innerHTML = q.options.map((opt, i) =>
     `<button class="btn btn-warning w-100 fw-bold mb-2 option-btn" onclick="handleAnswerSelection(${i})">${opt}</button>`
   ).join('');
   nextButton.classList.add('invisible');
+
+  // Dynamically adjust font size to fit within 2 lines
+  const questionEl = document.getElementById('quiz-question');
+  let fontSize = 2; // rem
+  const maxLines = 2;
+  const lineHeight = 1.2;
+  const containerHeight = fontSize * lineHeight * maxLines * 16; // 16px per rem
+
+  // Shrink font size until it fits within two lines or reaches minimum
+  while (questionEl.scrollHeight > containerHeight && fontSize > 1.1) {
+    fontSize -= 0.1;
+    questionEl.style.fontSize = fontSize + 'rem';
+  }
 }
 
 // Handle answer selection
