@@ -2,8 +2,8 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
+
 body {
   min-height: 100vh;
   width: 100vw;
@@ -13,14 +13,17 @@ body {
   background-position: center center;
   background-attachment: fixed;
 }
+
 .main-wrapper {
   max-width: 960px;
+  min-height: 540px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding-left: 32px;
   padding-right: 32px;
 }
+
 .container {
   background: rgba(79, 38, 131, 0.92);
   color: #ffc107;
@@ -28,6 +31,7 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
+
 @media (max-width: 576px) {
   .main-wrapper {
     max-width: 95vw;
@@ -37,7 +41,26 @@ body {
   .container {
     padding: 1.5rem !important;
   }
+ h1 {
+    font-size: 1.6rem !important;
+  }
+  #question-container h3 {
+    font-size: 1rem !important;
+  }
+
 }
+
+.question-flex {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  word-break: break-word;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 100%;
+
+}
+
 #progress-bar {
   pointer-events: none;
   cursor: default;
@@ -61,18 +84,21 @@ h1 {
      2px -2px 0 #2d014d,
     -2px  2px 0 #2d014d,
      2px  2px 0 #2d014d;
-     margin-bottom: 0 !important;
+  margin: 0 !important;
 }
+
 #question-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
 }
+
 #question-row h3 {
-  margin: 0.5rem 0 0.5rem 0;
+  margin: 0rem 0 0rem 0;
   flex: 1 1 auto;
   text-align: left;
+
 }
 #question-row {
   display: flex;
@@ -80,6 +106,7 @@ h1 {
   justify-content: center;
   gap: 1rem;
 }
+
 #feedback-message {
   display: flex;
   align-items: center;
@@ -88,23 +115,16 @@ h1 {
   min-height: 0;
   /* Hide when empty */
 }
+
 #feedback-message:empty {
   display: none;
 }
+
 #feedback-message span {
   margin: 0 !important;
   padding: 0 !important;
   font-size: 1rem;
   line-height: 1rem;
-}
-
-#question-container h3 {
-  min-height: 3.5em; /* Adjust as needed for longest question */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.5rem 0 0.5rem 0;
-  text-align: center;
 }
 
 #restart-button {
