@@ -13,7 +13,7 @@
   --safe-left: env(safe-area-inset-left, 0px);
 }
 
-/* reset / base */
+/* Base reset */
 html, body {
   height: 100%;
   margin: 0;
@@ -21,66 +21,77 @@ html, body {
 }
 
 body {
+  min-height: 100dvh;
   min-height: 100svh;
-  width: 100vw;
+  width: 100%;
   background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  box-sizing: border-box;
+  gap: 2rem;
 }
 
-body.noscroll {
-  overflow: hidden;
+body.noscroll { overflow: hidden; }
+
+/* Switch to top alignment if very short height (keyboard / landscape) */
+@media (max-height: 600px) {
+  body { justify-content: flex-start; }
 }
 
-/* layout wrapper (outer scroll area) */
+/* Scroll wrapper */
 .main-wrapper {
   max-width: 960px;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 32px;
-  padding-right: 32px;
+  margin-inline: auto;
   box-sizing: border-box;
-  max-height: calc(100svh - 3rem - var(--safe-top) - var(--safe-bottom));
+  padding-inline: clamp(1rem, 2vw, 2rem);
+  padding-top: clamp(0.75rem, 1.5vh, 1.5rem);
+  padding-bottom: clamp(0.75rem, 1.5vh, 1.5rem);
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
   overflow-y: auto;
-  padding-top: calc(1.25rem + var(--safe-top));
-  padding-bottom: calc(1.25rem + var(--safe-bottom));
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
-/* purple quiz container */
+/* Quiz container */
 .container {
   background: rgba(79, 38, 131, 0.92);
   color: #ffc107;
-  padding:
-    calc(var(--container-pad) + 0px)
-    calc(var(--container-pad) + 0px)
-    calc(var(--container-pad) + 0px)
-    calc(var(--container-pad) + 0px) !important;
-  padding-top: calc(var(--container-pad) + var(--safe-top)) !important;
-  padding-bottom: calc(var(--container-pad) + var(--safe-bottom)) !important;
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0.75rem 1.75rem -0.5rem rgba(0,0,0,0.55);
   box-sizing: border-box;
   overflow: hidden;
-  border-radius: 12px;
-  backdrop-filter: blur(3px);
+  padding:
+    clamp(1.25rem, 2.5vh, 2.25rem)
+    calc(clamp(1.25rem, 2vw, 2.25rem) + var(--safe-right))
+    clamp(1.5rem, 3vh, 2.75rem)
+    calc(clamp(1.25rem, 2vw, 2.25rem) + var(--safe-left)) !important;
 }
 
-/* question text helper */
+.container + .container { margin-top: 1.25rem; }
+
+/* Question text */
 .question-flex {
-  font-size: clamp(1rem, 1.1rem + 1vw, 1.5rem);
+  font-size: clamp(1rem, 0.85rem + 0.9vw, 1.55rem);
   line-height: 1.2;
   word-break: break-word;
-  display: block;
   margin: 0;
   text-align: left;
   max-width: 100%;
   min-width: 0;
 }
 
-/* progress bar */
+/* Progress bar */
 progress#quiz-progress {
   appearance: none;
   width: 100%;
@@ -90,39 +101,36 @@ progress#quiz-progress {
   border-radius: 8px;
   overflow: hidden;
 }
-progress#quiz-progress::-webkit-progress-bar {
-  background: #2d014d;
-}
+progress#quiz-progress::-webkit-progress-bar { background: #2d014d; }
 progress#quiz-progress::-webkit-progress-value {
-  background: #4caf50;
+  background: linear-gradient(90deg,#32d067,#169c42);
   transition: width 250ms ease;
 }
 progress#quiz-progress::-moz-progress-bar {
-  background: #4caf50;
+  background: linear-gradient(90deg,#32d067,#169c42);
   transition: width 250ms ease;
 }
 
-/* headings */
+/* Headings */
 h1 {
   color: #ffc107;
-  font-weight: bold;
-  font-size: 2.8rem;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.85rem);
   text-shadow:
     -2px -2px 0 #2d014d,
      2px -2px 0 #2d014d,
     -2px  2px 0 #2d014d,
      2px  2px 0 #2d014d;
-  margin-bottom: 0;
+  margin-bottom: 0.75rem;
 }
 
-/* question area */
+/* Question area */
 #question-container {
   margin-top: var(--space-md);
   margin-bottom: var(--space-md);
   width: 100%;
   box-sizing: border-box;
 }
-
 #question-row {
   display: flex;
   align-items: center;
@@ -132,7 +140,6 @@ h1 {
   flex-wrap: wrap;
   margin-bottom: var(--space-md);
 }
-
 #question-row .badge {
   flex: 0 0 auto;
   margin: 0;
@@ -149,137 +156,99 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* feedback */
+/* Feedback */
 #feedback-message {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  min-height: 0;
   margin-top: var(--space-sm);
 }
 #feedback-message:empty { display: none; }
 #feedback-message span {
-  margin: 0 !important;
-  padding: 0 !important;
   font-size: 1rem;
   line-height: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
-/* options + controls */
+/* Options + controls */
 #options-container {
   margin-top: var(--space-md);
   margin-bottom: var(--space-md);
 }
-
 #next-button,
 #restart-button,
-#start-button {
-  margin-top: var(--space-md);
-}
-
-.btn {
-  margin-bottom: var(--space-sm);
-}
+#start-button { margin-top: var(--space-md); }
+.btn { margin-bottom: var(--space-sm); }
 
 #score-container,
-#quiz-container {
-  overflow: visible;
-}
+#quiz-container { overflow: visible; }
 
-/* summary */
+/* Summary */
 #summary-container {
   margin-top: 0.75rem;
   padding-top: 0.5rem;
   overflow: visible;
 }
-#summary-container > * {
-  margin-top: 0.5rem;
-}
+#summary-container > * { margin-top: 0.5rem; }
 
-/* Normalize inner spacing so question height changes don't add extra gap */
 #question-container > * { margin-top: 0; }
 #question-container > *:last-child { margin-bottom: 0; }
-
 #options-container {
   margin-top: 0 !important;
   margin-bottom: var(--space-md);
 }
 
-/* small screens */
+/* Small screens */
 @media (max-width: 576px) {
-  body {
-    padding: 0;
-    min-height: 100svh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    /* ensure safe top spacing for Dynamic Island / notch */
-    padding-top: var(--safe-top);
-    padding-bottom: var(--safe-bottom);
-    box-sizing: border-box;
-  }
+  body { gap: 1.25rem; }
 
   .main-wrapper {
-    max-width: 100vw;
-    padding-left: calc(var(--safe-left) + 0px);
-    padding-right: calc(var(--safe-right) + 0px);
-    margin-left: auto;
-    margin-right: auto;
-    max-height: none;
-    width: 100%;
+    max-width: 100%;
     padding-top: calc(0.75rem + var(--safe-top));
     padding-bottom: calc(0.75rem + var(--safe-bottom));
+    padding-left: calc(0.75rem + var(--safe-left));
+    padding-right: calc(0.75rem + var(--safe-right));
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
   }
 
   .container {
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline: auto;
     padding:
-      calc(var(--container-pad-sm) + 0px)
-      calc(var(--container-pad-sm) + 0px)
-      calc(var(--container-pad-sm) + 0px)
-      calc(var(--container-pad-sm) + 0px) !important;
-    padding-top: calc(var(--container-pad-sm) + var(--safe-top)) !important;
-    padding-bottom: calc(var(--container-pad-sm) + var(--safe-bottom)) !important;
+      calc(var(--container-pad-sm) + 0.25rem)
+      calc(var(--container-pad-sm) + var(--safe-right))
+      calc(var(--container-pad-sm) + 0.5rem)
+      calc(var(--container-pad-sm) + var(--safe-left)) !important;
   }
 
-  h1 {
-    font-size: 1.6rem;
-  }
+  h1 { font-size: clamp(1.55rem, 1.3rem + 2vw, 2.1rem); }
 
   #question-container h3 {
-    display: block;
-    -webkit-line-clamp: unset;
-    line-clamp: unset;
-    -webkit-box-orient: initial;
-    max-height: none;
-    overflow: visible;
-    text-overflow: clip;
     font-size: clamp(1rem, 0.9rem + 1.2vw, 1.25rem);
     line-height: 1.3;
   }
 }
 
-/* medium+ refinement */
-@media (min-width: 577px) and (max-width: 991px) {
+/* Medium */
+@media (max-width: 576px) {
   .container {
-    padding-top: calc(var(--container-pad) + var(--safe-top)) !important;
-    padding-bottom: calc(var(--container-pad) + var(--safe-bottom)) !important;
-  }
-}
+    /* Constrain width so it doesn’t press against edges on narrow phones */
+    width: min(100%, 640px);
+    margin-inline: auto;
 
-/* large screens */
-@media (min-width: 992px) {
-  .main-wrapper {
-    padding-top: calc(2rem + var(--safe-top));
-    padding-bottom: calc(2rem + var(--safe-bottom));
+    /* Top / Right / Bottom / Left
+       Ensure at least 1.15rem plus safe-area; allow a bit more vertical comfort */
+    padding:
+      clamp(1.1rem, 2.2vh, 1.4rem)
+      max(calc(var(--safe-right) + 1.15rem), 1.15rem)
+      clamp(1.5rem, 3vh, 2rem)
+      max(calc(var(--safe-left) + 1.15rem), 1.15rem) !important;
   }
-  .container {
-    padding-top: calc(var(--container-pad) + var(--safe-top)) !important;
-    padding-bottom: calc(var(--container-pad) + var(--safe-bottom)) !important;
+
+  /* Optional: slightly more outer wrapper side padding so scroll shadow never hugs bezel */
+  .main-wrapper {
+    padding-left: max(calc(var(--safe-left) + 0.9rem), 0.9rem);
+    padding-right: max(calc(var(--safe-right) + 0.9rem), 0.9rem);
   }
 }
