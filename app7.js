@@ -61,11 +61,11 @@ function startQuiz() {
 function renderQuestion() {
   const cur = items[idx];
   els.questionBox.innerHTML = `
-    <div id="question-row" class="mb-2 d-flex align-items-center justify-content-center gap-2 flex-wrap">
+     <div id="question-row" class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
       <span class="badge bg-warning text-dark fs-6">Question ${idx+1} of ${items.length}</span>
       <div id="feedback-message"></div>
     </div>
-    <h3 id="quiz-question" class="question-flex mt-2">${cur.q}</h3>
+    <h3 id="quiz-question" class="question-flex">${cur.q}</h3>
   `;
   els.options.innerHTML = cur.opts.map((t,i)=>
     `<button class="btn btn-warning w-100 fw-bold mb-2 option-btn" data-i="${i}">${t}</button>`
