@@ -25,6 +25,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+body.noscroll {
+  overflow: hidden;
+}
+
 /* layout wrapper */
 .main-wrapper {
   max-width: 960px;
