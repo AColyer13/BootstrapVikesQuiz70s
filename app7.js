@@ -106,6 +106,7 @@ function showQuestion() {
       <div id="feedback-message"></div>
     </div>
     <p></p>
+    <p></p>
     <h3 id="quiz-question" class="question-flex">${q.question}</h3>
   `;
   optionsContainer.innerHTML = q.options.map((opt, i) =>
@@ -204,4 +205,5 @@ function updateProgressBar() {
   progressBar.style.width = `${percent}%`;
   progressBar.setAttribute('aria-valuenow', percent);
 }
+
 
