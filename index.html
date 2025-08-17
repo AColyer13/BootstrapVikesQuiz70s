@@ -17,14 +17,16 @@
     </div>
 
     <div id="quiz-container" class="container rounded shadow text-center d-none mb-4">
-      <h1 class="mb-4">1970's Minnesota Vikings Quiz</h1>
-      <div id="question-container" class="mb-3"></div>
-      <div id="progress-bar-container" class="progress mb-4" style="height: 16px;">
-        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%; background-color: #4caf50;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-      <div id="options-container" class="mb-3"></div>
-      <button id="next-button" class="btn btn-warning w-100 fw-bold invisible">Next Question</button>
-    </div>
+  <h1 class="mb-4">1970's Minnesota Vikings Quiz</h1>
+  <div id="question-container" class="mb-3"></div>
+  <div class="mb-4">
+    <progress id="quiz-progress" value="0" max="100" style="width:100%; height:16px;"></progress>
+    <div id="progress-text" class="mt-1 small"></div>
+  </div>
+
+  <div id="options-container" class="mb-3"></div>
+  <button id="next-button" class="btn btn-warning w-100 fw-bold invisible">Next Question</button>
+</div>
 
     <div id="score-container" class="container rounded shadow text-center d-none mb-4">
       <h2 class="text-success">Your Score:</h2>
