@@ -181,6 +181,14 @@ function showScore() {
   summaryContainer.innerHTML = summaryHTML;
 }
 
+document.body.classList.add('noscroll'); // Prevent scrolling at start
+
+function showScoreContainer() {
+  // ...existing code to show score container...
+  document.getElementById('score-container').classList.remove('d-none');
+  document.body.classList.remove('noscroll'); // Allow scrolling now
+}
+
 // Restart quiz button click
 restartButton.onclick = () => {
   scoreContainer.classList.add('d-none');
